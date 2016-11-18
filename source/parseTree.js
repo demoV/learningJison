@@ -14,8 +14,10 @@ Tree.prototype = {
 	addToRight: function(node) {
 		this.right = node;
 	},
-	toString: function() {
-		return '(' + this.left + this.root + this.right + ')';
+	withPeranthesis: function() {
+		var leftValue = typeof(this.left) == 'number' && this.left || this.left.withPeranthesis();
+		var rightValue = typeof(this.right) == 'number' && this.right || this.right.withPeranthesis();
+		return '(' + leftValue + this.root + rightValue + ')';
 	},
 	representation: function() {
 		var ops = {'+': 'plus', '-': 'minus'};

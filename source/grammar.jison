@@ -26,9 +26,8 @@
 
     var tree = function(left, root, right) {
         var rootTree = new Tree(root);
-        rootTree.add(left, right);
-        // rootTree.addToLeft(left);
-        // rootTree.addToRight(right);
+        rootTree.addToLeft(left);
+        rootTree.addToRight(right);
         return rootTree; 
     }
 %}

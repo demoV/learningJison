@@ -9,13 +9,13 @@ describe('ParseTree', function() {
 	it('should parse given string with parenthesis', function() {
 		var actual = p.parse('1 + 2 + 3 + 4');
 		var expected = '(((1+2)+3)+4)';
-		assert.equal(expected, actual.toString());
+		assert.equal(expected, actual.withPeranthesis());
 	});
 
 	it('should parse 1 + 2 to (1 + 2) parenthesis', function() {
 		var actual = p.parse('1 + 2');
 		var expected = '(1+2)';
-		assert.equal(expected, actual.toString());
+		assert.equal(expected, actual.withPeranthesis());
 	});
 
 	it('should parse 1 + 2 to (one plus two) parenthesis', function() {
