@@ -23,7 +23,7 @@ Tree.prototype = {
 		return  '(' + exp + ')';
 	},
 	evaluate: function() {
-		return this.evaluation(this.vars);
+		return this.evaluation({});
 	},
 	evaluation: function(lookup) {
 		var operations = {'+': maths.add};

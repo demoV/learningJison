@@ -25,6 +25,8 @@
 %{
     var path = require('path');
     var Tree = require(path.resolve('./source/tree.js'));  
+    var Trees = require(path.resolve('./source/trees.js')); 
+    var nodes =  require(path.resolve('./source/node.js')); 
     var vars = {};
 %}
 
@@ -34,28 +36,28 @@
 %right '%'
 %left UMINUS
 
-%start expressions
+%start program
 
 %% /* language grammar */
 assignment
     : VAR '=' e ';'
-        {vars[$1] = $3;}
+        {$$ = new Tree($1, $2, $3);}
+
     ;
 
 // variable
 //     : VAR 
 //         {$$ = yytext}        
 //     ;
-
+program
+    : expressions EOF {return $1}
+    ;
 expressions
-    : e EOF
-        { $1['vars'] = vars; return $1 }
-    | assignment EOF
-        {return $1}
+    : e ';'
+    | assignment
     | assignment expressions 
         {
-            $2['vars'] = vars
-            return $2;
+            $$  = new Trees($1, $2);
         }            
     ;
 
@@ -73,7 +75,7 @@ e
     | '(' e ')'
         {$$ = $2;}
     | NUMBER
-        {$$ = Number(yytext);}
+        {$$ = nodes.createNumber(Number(yytext));}
     | VAR 
     ;
 
