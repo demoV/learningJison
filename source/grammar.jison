@@ -40,15 +40,16 @@
 
 %% /* language grammar */
 assignment
-    : VAR '=' e ';'
-        {$$ = new Tree($1, $2, $3);}
-
+    : variable '=' e ';'
+        {$$ = $1.addValue($3);
+    }
     ;
 
-// variable
-//     : VAR 
-//         {$$ = yytext}        
-//     ;
+variable
+    : VAR 
+        {$$ = nodes.createAssign(yytext);}
+    ;    
+
 program
     : expressions EOF {return $1}
     ;
@@ -57,7 +58,7 @@ expressions
     | assignment
     | assignment expressions 
         {
-            $$  = new Trees($1, $2);
+           $$  = new Trees($1, $2);
         }            
     ;
 
@@ -76,6 +77,6 @@ e
         {$$ = $2;}
     | NUMBER
         {$$ = nodes.createNumber(Number(yytext));}
-    | VAR 
+    |variable            
     ;
 

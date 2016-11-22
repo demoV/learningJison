@@ -1,29 +1,46 @@
 var nodes = {};
 
-var Node = function(value, type, eFunc) {
+var NumberNode = function(value, type, eFunc) {
 	this.value = value;
 	this.type = type;
 	this.evaluater = eFunc;
 }
 
-Node.prototype = {
+NumberNode.prototype = {
 	evaluate: function() {
 		return this.evaluater(this.value);
+	},
+	isTypeof: function(type) {
+		return type == this.type;
 	}
 }
 
+var AssignNode = function(variable) {
+	this.variable = variable;
+	this.value = undefined;
+	this.type = 'assign';
+}
 
-nodes.assignNode = function() {};
+AssignNode.prototype = {
+	evaluate: function(lookup) {
+		lookup[this.variable] = this.value;
+	},
+	addValue: function(value) {
+		this.value = value;
+		return this;
+	},
+	isTypeof: function(type) {
+		return type == this.type;
+	}
+}
 
-nodes.createNumber = function(number) {
-	return new Node(number, Number, function(){return this.value;})
+nodes.createAssign = function(variable) {
+	console.log('hey i mher')
+	return new AssignNode(variable);
 };
 
-nodes.createOps = function(symbol, left, right) {
-	var ops = {'+': function(){}, "-": function(){}};
-	return new Node(symbol, "Ops", function() {
-		return left.evaluate() + right.evaluate();
-	});
+nodes.createNumber = function(number) {
+	return new NumberNode(number, 'number', function(){return this.value;})
 };
 
 module.exports = nodes;

@@ -1,7 +1,15 @@
-var Trees = function(left, root) {
-	this.all = [root, left];
+var Trees = function(left, right) {
+	this.tree = [left, right];
 }
 
+Trees.prototype = {
+	evaluate: function() {
+		return this.tree.reduce(function(initial, node) {
+			console.log(initial, 'initial')
+			return node.evaluate(initial);
+		}, {'_': undefined})['_']
+	}
+}
 
 // var Node = function(value, type, eFunc) {
 // 	this.value = value;
