@@ -3,54 +3,47 @@ var maths = require('./mathFunctions');
 
 var Tree = function(left, root, right) {
 	this.value = [root, left, right];
-	this.type = '';
+	this.type = 'node';
 }
 
 
 Tree.prototype = {
 	withPeranthesis: function() {
-		var leftValue = this.value[1] instanceof Tree  && this.value[1].withPeranthesis()  || this.value[1].evaluate();
-		var rightValue = this.value[2] instanceof Tree  && this.value[2].withPeranthesis() || this.value[2].evaluate();
-		return '(' + leftValue + this.value[0] + rightValue + ')';
+		var leftValue = toPeranthesis(this.value[1]);
+		var rightValue = toPeranthesis(this.value[2]);
+		return '(' + leftValue + this.value[0].sign + rightValue + ')';
 	},
 	representation: function() {
-		var ops = {'+': 'plus', '-': 'minus', '*': 'times', '=': 'equal'};
-		var left = this.value[1];
-		var right = this.value[2];
-		var leftValue = left instanceof Tree  && left.representation() || converter.toWords(left.evaluate()) ;
-
-		var rightValue = right instanceof Tree &&  right.representation() || converter.toWords(right.evaluate());
-		var exp =  [ leftValue, ops[this.value[0]], rightValue].join(' ');
+		var leftValue = toWords(this.value[1]);
+		var rightValue = toWords(this.value[2]);
+		var exp =  [ leftValue, this.value[0].asString, rightValue].join(' ');
 		return  '(' + exp + ')';
+	},
+	evaluation: function(lookup) {
+		lookup = lookup || {};
+		lookup['_'] = this.evaluate(lookup);
+		return lookup;
 	},
 	evaluate: function(lookup) {
 		lookup = lookup || {};
-		return this.evaluation(lookup);
-	},
-	evaluation: function(lookup) {
-		var operations = {'+': maths.add, '=': maths.equal};
 		var left = this.value[1];
 		var right = this.value[2];
 		var operator = this.value[0]
-		// var leftValue =  left.evaluate();
-		// var	rightValue = right.evaluate();
-		// console.log(JSON.stringify(leftValue), '---------', JSON.stringify(rightValue), "===", JSON.stringify(left))
-		return operations[this.value[0]](left, right, lookup)['_'];
+		return operator(left, right, lookup)['_'];
 	},
 	isTypeof: function(type) {
 		return type == this.type;
 	}
 }
 
-var valueOf = function(key, lookup) {
-	lookup = lookup || {};
-	if (lookup.hasOwnProperty(key)) {
-		var value = lookup[key];
-		if (value instanceof Tree) {
-			return value.evaluation(lookup);
-		}
-		return value;
-	}
-	return key;
+var toPeranthesis = function(child) {
+	if (child instanceof Tree) 
+		return child.withPeranthesis();
+	return child.evaluate();
+}
+var toWords = function(child) {
+	if (child instanceof Tree)
+	 	return child.representation()
+	return converter.toWords(child.evaluate()) ;
 }
 module.exports = Tree;

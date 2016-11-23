@@ -12,6 +12,9 @@ NumberNode.prototype = {
 	},
 	isTypeof: function(type) {
 		return type == this.type;
+	},
+	evaluation: function() {
+		return this.evaluate();
 	}
 }
 
@@ -22,8 +25,9 @@ var AssignNode = function(variable) {
 }
 
 AssignNode.prototype = {
-	evaluate: function(lookup) {
-		lookup[this.variable] = this.value;
+	evaluation: function(lookup) {
+		lookup[this.variable] = this.value.evaluate(lookup);
+		return lookup;
 	},
 	addValue: function(value) {
 		this.value = value;
@@ -31,11 +35,23 @@ AssignNode.prototype = {
 	},
 	isTypeof: function(type) {
 		return type == this.type;
+	},
+	getVariable: function() {
+		return this.variable;
+	},
+	parent: function() {
+		var p = this.getVariable();
+		if (this.value != undefined && this.value.isTypeof('assign'))
+			p = this.value.parent();
+		return p;
+	},
+	evaluate: function(lookup) {
+		var p = this.parent()
+		return lookup[p]
 	}
 }
 
 nodes.createAssign = function(variable) {
-	console.log('hey i mher')
 	return new AssignNode(variable);
 };
 

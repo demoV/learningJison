@@ -55,20 +55,45 @@ describe('ParseTree', function() {
 		assert.equal(expected, actual);
 	});
 
-	it.only('should evaluate 1 + 2 + 4 as 3', function() {
+	it('should evaluate 1 + 2 + 4 as 3', function() {
 		var actual = p.parse('1 + 2 + 4;');
-		console.log(JSON.stringify(actual))
 		var expected = 7;
 		assert.equal(expected, actual.evaluate());
 	});
 
-	// it.only('should evaluate complex expresion ', function() {
-	// 	var actual = p.parse('a=10+2+1; a=a+1;').evaluate();
-	// 	var expected = 27;
-	// 	assert.equal(expected, actual);
-	// });
+	it('should evaluate complex expresion ', function() {
+		var actual = p.parse('a=10+2+1; a=a+1;').evaluate();
+		var expected = 14;
+		assert.equal(expected, actual);
+	});
 
-	it('should throw error when variable is not define', function() {
-		var actual = p.parse('b+13;').evaluate();
+	it('should evaluating complex expresion ', function() {
+		var actual = p.parse('a=10+2+1; a=a+1; b=a+6;').evaluate();
+		var expected = 20;
+		assert.equal(expected, actual);
+	});
+
+	it('should evaluate complex assignment ', function() {
+		var actual = p.parse('a=10+2+1; a=a+1; b=a+6; c=b+10;').evaluate();
+		var expected = 30;
+		assert.equal(expected, actual);
+	});
+
+	it('should evaluate complex assignment with multiple variable', function() {
+		var actual = p.parse('a=10+2+1; a=a+1; b=a+6; c=b+10;').evaluate();
+		var expected = 30;
+		assert.equal(expected, actual);
+	});
+
+	it('should evaluate multiply operations', function() {
+		var actual = p.parse('a=10+2+1; a=a+1; b=a+6; c=b*10;').evaluate();
+		var expected = 200;
+		assert.equal(expected, actual);
+	});
+
+	it('should evaluate power operations', function() {
+		var actual = p.parse('a=10+2+1; a=a+1; b=a+6; c=b^2;').evaluate();
+		var expected = 400;
+		assert.equal(expected, actual);
 	});
 });

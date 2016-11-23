@@ -14,6 +14,7 @@
 "("                   return '('
 ")"                   return ')'
 "="                   return '='
+"^"                   return '^'
 ";"                   return ';'
 [a-z]                  return 'VAR'
 <<EOF>>               return 'EOF'
@@ -27,25 +28,29 @@
     var Tree = require(path.resolve('./source/tree.js'));  
     var Trees = require(path.resolve('./source/trees.js')); 
     var nodes =  require(path.resolve('./source/node.js')); 
-    var vars = {};
+    var maths =  require(path.resolve('./source/mathFunctions.js')); 
 %}
 
 
 %left '+' '-'
 %left '*' '/'
 %right '%'
+%left '^'
 %left UMINUS
 
 %start program
 
 %% /* language grammar */
 assignment
-    : variable '=' e ';'
-        {$$ = $1.addValue($3);
-    }
+    : identifier '=' e ';'
+        {$$ = $1.addValue($3);}
+    | identifier '=' assignment
+        { 
+            $$ = $1.addValue($3);
+        }
     ;
 
-variable
+identifier
     : VAR 
         {$$ = nodes.createAssign(yytext);}
     ;    
@@ -64,19 +69,21 @@ expressions
 
 e
     : e '+' e
-        {$$ = new Tree($1, $2, $3) ;}
+        {$$ = new Tree($1, maths.add, $3) ;}
     | e '-' e
-        {$$ = new Tree($1, $2, $3) ;}
+        {$$ = new Tree($1, maths.sub, $3) ;}
     | e '*' e
-        {$$ = new Tree($1, $2, $3) ;}
+        {$$ = new Tree($1, maths.mul, $3) ;}
     | e '/' e
         {$$ = $1/$3;}
     | '-' e %prec UMINUS
         {$$ = -$2;}
+    | e '^' e 
+        {$$ = new Tree($1, maths.pow, $3);}   
     | '(' e ')'
         {$$ = $2;}
     | NUMBER
         {$$ = nodes.createNumber(Number(yytext));}
-    |variable            
+    |identifier            
     ;
 
