@@ -15,6 +15,9 @@ NumberNode.prototype = {
 	},
 	evaluation: function() {
 		return this.evaluate();
+	},
+	asString: function() {
+		return '' + this.evaluate();
 	}
 }
 
@@ -26,7 +29,11 @@ var AssignNode = function(variable) {
 
 AssignNode.prototype = {
 	evaluation: function(lookup) {
-		lookup[this.variable] = this.value.evaluate(lookup);
+		if (this.value) {
+			lookup[this.variable] = this.value.evaluate(lookup);
+			lookup['_'] = lookup[this.variable];
+		}
+		
 		return lookup;
 	},
 	addValue: function(value) {
@@ -48,6 +55,12 @@ AssignNode.prototype = {
 	evaluate: function(lookup) {
 		var p = this.parent()
 		return lookup[p]
+	},
+	toJS: function() {
+		return this.variable + ' = ' + this.value.asString(); 
+	},
+	asString: function() {
+		return this.getVariable();
 	}
 }
 

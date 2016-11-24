@@ -15,6 +15,7 @@
 ")"                   return ')'
 "="                   return '='
 "^"                   return '^'
+"!"                   return '!'
 ";"                   return ';'
 [a-z]                  return 'VAR'
 <<EOF>>               return 'EOF'
@@ -36,6 +37,7 @@
 %left '*' '/'
 %right '%'
 %left '^'
+%right '!'
 %left UMINUS
 
 %start program
@@ -84,6 +86,8 @@ e
         {$$ = $2;}
     | NUMBER
         {$$ = nodes.createNumber(Number(yytext));}
-    |identifier            
+    |identifier 
+    | e '!'
+        {$$ = new Tree($1, maths.fact, undefined);}           
     ;
 

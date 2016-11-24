@@ -23,6 +23,15 @@ maths.pow = function(a, b, lookup) {
 	return lookup; 
 }
 
+maths.fact = function(a, b, lookup) {
+	lookup['_'] = factorial(a.evaluate(lookup));
+	return lookup;
+}
+
+var factorial = function(num) {
+	if (num == 1) {return 1};
+	return num * factorial(num - 1)
+}
 maths.pow.asString = 'pow'
 maths.add.asString = 'plus';
 maths.mul.asString = 'times';

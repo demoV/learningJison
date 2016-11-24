@@ -96,4 +96,43 @@ describe('ParseTree', function() {
 		var expected = 400;
 		assert.equal(expected, actual);
 	});
+
+	it('should evaluate factorial operations', function() {
+		var actual = p.parse('a=5; a!;');
+		var expected = 120;
+		assert.equal(expected, actual.evaluate({}));
+	});
+
+	it('should evaluate reassign the variable', function() {
+		var actual = p.parse('a=5; a=a+1;a!;');
+		var expected = 720;
+		assert.equal(expected, actual.evaluate({}));
+	});
+
+	it('can evaluate simple assignment', function() {
+		var actual = p.parse('a=5; a;');
+		var expected = 5;
+		assert.equal(expected, actual.evaluate());
+	});
+
+	it('can return variable value if that is last statement', function() {
+		var actual = p.parse('a=2; b=2; a=a+b; a;');
+		var expected = 4;
+		assert.equal(expected, actual.evaluate());
+	});
+
+	it('can return variable value if that is last statement', function() {
+		var actual = p.parse('a=2; b=2; a=a+b; a;');
+		var expected = 4;
+		assert.equal(expected, actual.evaluate());
+	});
+
+	it('should give equivalent JS code', function() {
+		var actual = p.parse('a=2; a;');
+		var expected = 'var a = 2;\n console.log(a)';
+		assert.equal(expected, actual.toJS());
+	});
+
+
+
 });

@@ -31,6 +31,26 @@ describe('Assign node', function() {
 
 		var actual = varC.evaluate(lookupTable);
 		assert.equal(2, actual);
-	})
+	});
+
+	it('should give format of js', function() {
+		var node = nodes.createAssign('a');
+		node.addValue(nodes.createNumber(2));
+		var expected = "a = 2";
+		var actual = node.toJS();
+		assert.equal(expected, actual);
+
+	});
+
+
+	it('should give js of multiple assienment', function() {
+		var varB = nodes.createAssign('b');
+		varB.addValue(nodes.createAssign('a'));
+		var expected = 'b = a';
+		var actual = varB.toJS();
+		assert.equal(expected, actual);
+	});
+
+
 
 })
