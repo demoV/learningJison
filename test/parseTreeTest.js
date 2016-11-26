@@ -8,7 +8,7 @@ var p = new Parser(grammar);
 
 describe('ParseTree', function() {
 	it('should parse given string with parenthesis', function() {
-		var actual = p.parse('1 + 2 + 3 + 4;');
+		var actual = p.parse('1 + 2 + 3 + 4;');	
 		var expected = '(((1+2)+3)+4)';
 		assert.equal(expected, actual.withPeranthesis());
 	});

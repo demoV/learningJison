@@ -46,10 +46,10 @@
 assignment
     : identifier '=' e ';'
         {$$ = $1.addValue($3);}
-    | identifier '=' assignment
-        { 
-            $$ = $1.addValue($3);
-        }
+    // | identifier '=' assignment
+    //     { 
+    //         $$ = $1.addValue($3);
+    //     }
     ;
 
 identifier
@@ -58,15 +58,14 @@ identifier
     ;    
 
 program
-    : expressions EOF {return $1}
+    : expressions EOF { return $1}
     ;
 expressions
-    : e ';'
-    | assignment
-    | assignment expressions 
-        {
-           $$  = new Trees($1, $2);
-        }            
+    : expressions e ';'
+        { $1.add($2); }
+    | expressions assignment
+        {$1.add($2)} 
+    | {$$ = new Trees()}        
     ;
 
 e
